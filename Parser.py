@@ -148,9 +148,12 @@ class SingleMatchParser:
 
             def _get_single_game_serving_player(elem):
                 game_score = elem.find_element_by_class_name('dllYgZ')
-                p1, p2 = game_score.find_elements_by_xpath("*")
-                p1_class = p1.get_attribute("class").split()[-1]
-                p2_class = p2.get_attribute("class").split()[-1]
+                if len(game_score.find_elements_by_xpath("*")) == 2:
+                    p1, p2 = game_score.find_elements_by_xpath("*")
+                    p1_class = p1.get_attribute("class").split()[-1]
+                    p2_class = p2.get_attribute("class").split()[-1]
+                else:
+                    return 1
                 assert not (p1_class == p2_class == 'boODVR') ### CHECK
                 if p1_class == 'boODVR': # class of serving player
                     return 0
