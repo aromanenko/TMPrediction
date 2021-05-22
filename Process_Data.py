@@ -58,7 +58,8 @@ def unpack_and_change(matches):
                 elif stat == "match_duration":
                     if matches[match][stat] != None:
                         if matches[match][stat] != "Walkover":
-                            hrs = int(matches[match][stat].split(" ")[-2][:-1])
+                            if 'h' in matches[match][stat].split(" ")[-2]:
+                                hrs = int(matches[match][stat].split(" ")[-2][:-1])
                             mnt = int(matches[match][stat].split(" ")[-1][:-1])
                             temp_list_matches[match][stat + "_mnt"] = str(hrs * 60 + mnt)
                         else:

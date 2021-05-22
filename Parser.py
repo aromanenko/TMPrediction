@@ -161,12 +161,9 @@ class SingleMatchParser:
 
             def _get_single_game_pbp(elem):
                 game_board = elem.find_element_by_class_name('exWgBj')
-                if game_board.text != '':
-                    score_cols = game_board.find_elements_by_xpath("*")            
-                    pbp = [tuple(x.text.split('\n')) for x in score_cols]
-                    return pbp
-                else:
-                    return [tuple()]
+                score_cols = game_board.find_elements_by_xpath("*")            
+                pbp = [tuple(x.text.split('\n')) for x in score_cols]
+                return pbp
 
             set_key = None
             pbp_within_set = []
