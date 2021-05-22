@@ -35,8 +35,32 @@ def create_data1(df):
 
 	return data
 
+def create_data2(df):
+	features_from = '2015-01-01'
+	cols2keep = set(['Surface', 'hour', 'round', 'p1_win',
+	    'p1_age', 'p2_age', 'p1_height', 'p2_height',
+	    'p1_birthday_today', 'p2_birthday_today'])
+
+	for x in df.keys():
+	    if 'lag' in x:
+	        cols2keep.add(x)
+
+	data = df.loc[df.index.get_level_values('date') > features_from, list(cols2keep)] \
+	    .dropna(subset=['p1_win'])
+
+	return data
+
+
+def create_data3(df):
+	features_from = '2015-01-01'
+	cols2keep = set(['p1_win', 'k1', 'k2'])
+	data = df.loc[df.index.get_level_values('date') > features_from, list(cols2keep)] \
+	    .dropna(subset=['p1_win'])
+
+	return data
+
 def build_model_classifier(data, startdate):
-	startdate = '2019-01-01'
+	startdate = '2020-01-01'
 	y = data['p1_win'].astype(int)
 	X = data.drop(['p1_win'], axis=1)
 	date_idx = X.index.get_level_values('date')
@@ -61,8 +85,4 @@ def build_model_classifier(data, startdate):
 	model.fit(X_train,y_train, verbose=True)
 	y_pred = model.predict_proba(X_test)
 	return y_pred
-		
-
-
-
-
+	
