@@ -91,7 +91,7 @@ class SingleMatchParser:
             if "after" in text.split('\n')[1]:
                 self.match_duration = text.split('\n')[1]
             self.date = text.split('\n')[0]
-        except Exception
+        except Exception:
             pass
     
     def get_sets_score(self):
