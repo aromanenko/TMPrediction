@@ -138,7 +138,7 @@ class SingleMatchParser:
             need_to_click.append(x)
         for x in need_to_click:
             x.click()
-            sleep(0.4)
+            sleep(0.7)
 
         try:
             pbp_score = defaultdict(list)
@@ -161,10 +161,12 @@ class SingleMatchParser:
 
             def _get_single_game_pbp(elem):
                 game_board = elem.find_element_by_class_name('exWgBj')
-                assert game_board.text != '' ### CHECK
-                score_cols = game_board.find_elements_by_xpath("*")            
-                pbp = [tuple(x.text.split('\n')) for x in score_cols]
-                return pbp
+                if game_board.text != '':
+                    score_cols = game_board.find_elements_by_xpath("*")            
+                    pbp = [tuple(x.text.split('\n')) for x in score_cols]
+                    return pbp
+                else:
+                    return [tuple()]
 
             set_key = None
             pbp_within_set = []
