@@ -81,7 +81,7 @@ def build_model_classifier(data, startdate):
 	    'eval_metric': ['logloss']
 	}
 	cv = TimeSeriesSplit(n_splits=10)
-	model = GridSearchCV(xgb.XGBClassifier(n_jobs=3), grid_params, scoring=my_accuracy, cv=cv)
+	model = GridSearchCV(xgb.XGBClassifier(n_jobs=3), grid_params, scoring=metric_accuracy, cv=cv)
 	model.fit(X_train,y_train, verbose=True)
 	y_pred = model.predict_proba(X_test)
 	return y_pred
