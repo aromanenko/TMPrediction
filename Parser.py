@@ -46,6 +46,8 @@ class SingleMatchParser:
             text = text[0].text.split()
         else:
             text = text[1].text.split()
+        if "Not" in text:
+            self.status = "Not started"
         if "Walkover" in text:
             self.status = "Walkover"
         if "Retired" in text:
@@ -240,17 +242,24 @@ class SingleMatchParser:
     
     def parse_page(self):
         self.find_status()
-        if (self.status != "Canceled"):
+        if self.status == "Not started":
             self.scroll_page()
             self.get_player_names()
-            self.get_match_timings()
             self.get_odds()
             self.get_match_info()
-            if (self.status != "Walkover"):
-                self.get_sets_time()
-                self.get_sets_score()
-                self.get_pbp_info()
-                self.get_sets_stat()
+            self.get_match_timings()
+        else:
+            if (self.status != "Canceled"):
+                self.scroll_page()
+                self.get_player_names()
+                self.get_match_timings()
+                self.get_odds()
+                self.get_match_info()
+                if (self.status != "Walkover"):
+                    self.get_sets_time()
+                    self.get_sets_score()
+                    self.get_pbp_info()
+                    self.get_sets_stat()
         
     def as_dict(self):
         self.parse_page()
