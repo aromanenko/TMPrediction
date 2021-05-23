@@ -175,11 +175,13 @@ def invert_dataframe(df):
             df[name2] = tmp
             
             
-    for i in range(len(df)): ## CAN BE IMPROVED
+    for i in range(len(df)):
         if df['player1_win'][i] == 1:
             df['player1_win'][i] = 0
-        else:
+        elif df['player1_win'][i] == 0:
             df['player1_win'][i] = 1
+        else:
+            df['player1_win'][i] = -1
         
     
 

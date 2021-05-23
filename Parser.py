@@ -387,7 +387,10 @@ def parse_date(date, matches, hrefs):
                 web.get(url) ## Возврат на основную страницу парсинга
                 sleep(0.7)
                 if match != None:
-                    set_loser(loser_name, match)
+                    if match['status'] != 'Not started':
+                        set_loser(loser_name, match)
+                    else:
+                        match['player1_win'] = -1
                     set_stage(stage, match)
                     matches.append(match)
             pos += 50
@@ -405,5 +408,6 @@ def parse(startdate, enddate, matches, hrefs, path):
     while startdate != enddate:
         parse_date(str(startdate), matches, hrefs) 
         startdate += datetime.timedelta(1)
+    web.close()
 
 
