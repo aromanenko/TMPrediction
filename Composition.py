@@ -48,24 +48,24 @@ def aggregate(res, pred_df, loss_func = loss_function, weights = None, m = 2):
         else:
             s = (m + G(0) + G(1)) / 2
         agg_pred[t] = np.array([abs(s - G(1)) / 2, abs(s - G(0)) / 2])
-        if res[t] != None:
+        if res[t] != -1:
             weights = (weights * np.exp(-loss_func(res[t], np.transpose(gamma))))
             weights /= np.sum(weights)
         for i in range(K):
-            if (res[t] != None):
+            if (res[t] != -1):
                 res_df[str(names[i])+'_accumulated'][t] = res_df[str(names[i])+'_accumulated'][t - 1] + loss_func(res[t], gamma[i])
                 res_df[str(names[i])+'_mean'][t] = res_df[str(names[i])+'_accumulated'][t] / t
             res_df[str(names[i]) + '_weight'][t] = weights[i]
-            if t > 100 and res[t] != None:
+            if t > 100 and res[t] != -1:
                 res_df[str(names[i])+'_mean_100'][t] = (res_df[str(names[i])+'_accumulated'][t] - res_df[str(names[i])+'_accumulated'][t - 100]) / 100
-            elif res[t] != None:
+            elif res[t] != -1:
                 res_df[str(names[i])+'_mean_100'][t] = res_df[str(names[i])+'_mean'][t]
-        if res[t] != None:
+        if res[t] != -1:
             res_df['composition_accumulated'][t] = res_df['composition_accumulated'][t - 1] + loss_func(res[t], agg_pred[t])
             res_df['composition_mean'][t] = res_df['composition_accumulated'][t] / t
-        if t > 100 and res[t] != None:
+        if t > 100 and res[t] != -1:
             res_df['composition_mean_100'][t] = (res_df['composition_accumulated'][t] - res_df['composition_accumulated'][t - 100]) / 100
-        elif res[t] != None:
+        elif res[t] != -1:
             res_df['composition_mean_100'][t] = res_df['composition_mean'][t]
     res_df['composition_k1'] = agg_pred.transpose()[0]
     res_df['composition_k2'] = agg_pred.transpose()[1]
