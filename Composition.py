@@ -6,7 +6,7 @@ import datetime
 def make_df(models_pred):
     preds = []
     for x in models_pred:
-        pred = np.array(list(map(lambda x: np.array([x[1], x[0]]), x)))
+        x = np.array(list(map(lambda x: np.array([x[1], x[0]]), x)))
         preds.append(x)
     pred = np.array(preds)
     pred_list = list(map(lambda x : list(map(list, x)), pred))
