@@ -12,33 +12,36 @@ def make_df(models_pred):
     pred_list = list(map(lambda x : list(map(list, x)), pred))
     return pd.DataFrame(pred_list).transpose()
 
-def get_res(data, startdate1='2020-01-01'):
+def get_res(data, startdate='2020-01-01'):
     date_idx = data.index.get_level_values('date')
-    res = np.array(data[(date_idx >= startdate1)]['p1_win'])
+    res = np.array(data[(date_idx >= startdate)]['p1_win'])
     return res
     
+def get_names(data, startdate = '2020-01-01'):
+    date_idx = data.index.get_level_values('date')
+    names = np.array(df[(date_idx >= startdate)].reset_index()[['p1', 'p2']]).transpose()
+    return names
+
 def loss_function(res, pred):
     return (pred[0] - res) ** 2 + (pred[1] - abs(res - 1)) ** 2
 
-def aggregate(res, pred_df, loss_func = loss_function, weights = None, m = 2):
+def aggregate(df, startdate, pred_list, loss_func = loss_function, weights = None, m = 2):
+    player_names = get_names(df, startdate)
+    res = get_res(df, startdate)
+    pred_df = make_df(pred_list)
     val = pred_df.values.transpose()
     pred = np.array(list(map(lambda x : np.array(list(map(list, x))), val)))
     T = len(res)
     K = len(pred)
     res_df = pd.DataFrame()
     names = pred_df.columns
-    for i in range(K):
-        res_df[str(names[i]) + '_mean'] = np.zeros(T)
-        res_df[str(names[i]) + '_mean_100'] = np.zeros(T)
-        res_df[str(names[i]) + '_accumulated'] = np.zeros(T)
-        res_df[str(names[i]) + '_weight'] = np.zeros(T)
-    res_df['composition_mean'] = np.zeros(T)
-    res_df['composition_mean_100'] = np.zeros(T)
-    res_df['composition_accumulated'] = np.zeros(T)
     if not weights:
         weights = np.full(K, 1/K)
     agg_pred = np.zeros(2 * T).reshape(T, 2)
+    start_new_period = 0
     for t in range(1, T):
+        if res[t] == -1 and start_new_period == 0:
+            start_new_period = t
         gamma = pred[:,t]
         def G(omega):
             return -np.log(np.inner(weights, np.exp(-loss_func(omega, np.transpose(gamma)))))
@@ -51,22 +54,10 @@ def aggregate(res, pred_df, loss_func = loss_function, weights = None, m = 2):
         if res[t] != -1:
             weights = (weights * np.exp(-loss_func(res[t], np.transpose(gamma))))
             weights /= np.sum(weights)
-        for i in range(K):
-            if (res[t] != -1):
-                res_df[str(names[i])+'_accumulated'][t] = res_df[str(names[i])+'_accumulated'][t - 1] + loss_func(res[t], gamma[i])
-                res_df[str(names[i])+'_mean'][t] = res_df[str(names[i])+'_accumulated'][t] / t
-            res_df[str(names[i]) + '_weight'][t] = weights[i]
-            if t > 100 and res[t] != -1:
-                res_df[str(names[i])+'_mean_100'][t] = (res_df[str(names[i])+'_accumulated'][t] - res_df[str(names[i])+'_accumulated'][t - 100]) / 100
-            elif res[t] != -1:
-                res_df[str(names[i])+'_mean_100'][t] = res_df[str(names[i])+'_mean'][t]
-        if res[t] != -1:
-            res_df['composition_accumulated'][t] = res_df['composition_accumulated'][t - 1] + loss_func(res[t], agg_pred[t])
-            res_df['composition_mean'][t] = res_df['composition_accumulated'][t] / t
-        if t > 100 and res[t] != -1:
-            res_df['composition_mean_100'][t] = (res_df['composition_accumulated'][t] - res_df['composition_accumulated'][t - 100]) / 100
-        elif res[t] != -1:
-            res_df['composition_mean_100'][t] = res_df['composition_mean'][t]
-    res_df['composition_k1'] = agg_pred.transpose()[0]
-    res_df['composition_k2'] = agg_pred.transpose()[1]
+    res_df['Player1'] = player_names[0]
+    res_df['Player2'] = player_names[1]
+    res_df['Probability_win1'] = agg_pred.transpose()[0]
+    res_df['Probability_win2'] = agg_pred.transpose()[1]
+    res_df = res_df[start_new_period:]
+    res_df = res_df.set_index(['Player1', 'Player2'])
     return res_df
