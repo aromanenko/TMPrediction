@@ -35,7 +35,10 @@ def aggregate(player_names, res, pred_df, loss_func = loss_function, weights = N
     if not weights:
         weights = np.full(K, 1/K)
     agg_pred = np.zeros(2 * T).reshape(T, 2)
+    start_new_period = 0
     for t in range(1, T):
+        if res[t] == -1 and start_new_period == 0:
+            start_new_period = t
         gamma = pred[:,t]
         def G(omega):
             return -np.log(np.inner(weights, np.exp(-loss_func(omega, np.transpose(gamma)))))
@@ -52,4 +55,5 @@ def aggregate(player_names, res, pred_df, loss_func = loss_function, weights = N
     res_df['Player2'] = player_names[1]
     res_df['Probability_win1'] = agg_pred.transpose()[0]
     res_df['Probability_win2'] = agg_pred.transpose()[1]
+    res_df = res_df[start_new_period:]
     return res_df
