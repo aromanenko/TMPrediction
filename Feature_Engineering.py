@@ -469,9 +469,9 @@ def fix_letters(df_):
     print("SURNAMES FIXED\n")
 
 
-def invert(df):
+def invert(df, startdate):
 	print("ADDING INVERT MATCHES...")
-	df_copy = df.copy()
+	df_copy = df[df['date'] < startdate].copy()
 	invert_dataframe(df_copy)
 	df = df.set_index(["player1", "player2"])
 	df_copy = df_copy.set_index(["player1", "player2"])

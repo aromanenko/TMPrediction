@@ -59,8 +59,7 @@ def create_data3(df):
 
 	return data
 
-def build_model_classifier(data, startdate):
-	startdate = '2020-01-01'
+def build_model_classifier(data, startdate='2020-01-01'):
 	y = data['p1_win'].astype(int)
 	X = data.drop(['p1_win'], axis=1)
 	date_idx = X.index.get_level_values('date')
