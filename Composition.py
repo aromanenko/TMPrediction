@@ -25,7 +25,10 @@ def get_names(data, startdate = '2020-01-01'):
 def loss_function(res, pred):
     return (pred[0] - res) ** 2 + (pred[1] - abs(res - 1)) ** 2
 
-def aggregate(player_names, res, pred_df, loss_func = loss_function, weights = None, m = 2):
+def aggregate(df, startdate, pred_list, loss_func = loss_function, weights = None, m = 2):
+    player_names = get_names(df, startdate)
+    res = get_res(df, startdate)
+    pred_df = make_df(pred_list)
     val = pred_df.values.transpose()
     pred = np.array(list(map(lambda x : np.array(list(map(list, x))), val)))
     T = len(res)
