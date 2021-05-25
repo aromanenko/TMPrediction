@@ -56,4 +56,5 @@ def aggregate(player_names, res, pred_df, loss_func = loss_function, weights = N
     res_df['Probability_win1'] = agg_pred.transpose()[0]
     res_df['Probability_win2'] = agg_pred.transpose()[1]
     res_df = res_df[start_new_period:]
+    res_df = res_df.set_index(['Player1', 'Player2'])
     return res_df
