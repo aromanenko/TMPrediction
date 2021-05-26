@@ -19,7 +19,7 @@ def get_res(data, startdate='2020-01-01'):
     
 def get_names(data, startdate = '2020-01-01'):
     date_idx = data.index.get_level_values('date')
-    names = np.array(df[(date_idx >= startdate)].reset_index()[['p1', 'p2']]).transpose()
+    names = np.array(data[(date_idx >= startdate)].reset_index()[['p1', 'p2']]).transpose()
     return names
 
 def loss_function(res, pred):
