@@ -54,10 +54,10 @@ def aggregate(df, startdate, pred_list, loss_func = loss_function, weights = Non
         if res[t] != -1:
             weights = (weights * np.exp(-loss_func(res[t], np.transpose(gamma))))
             weights /= np.sum(weights)
-    res_df['Player1'] = player_names[0]
-    res_df['Player2'] = player_names[1]
-    res_df['Probability_win1'] = agg_pred.transpose()[0]
-    res_df['Probability_win2'] = agg_pred.transpose()[1]
+    res_df['p1'] = player_names[0]
+    res_df['p2'] = player_names[1]
+    res_df['p1_win_prob'] = agg_pred.transpose()[0]
+    res_df['p2_win_prob'] = agg_pred.transpose()[1]
     res_df = res_df[start_new_period:]
     res_df = res_df.set_index(['Player1', 'Player2'])
     return res_df
