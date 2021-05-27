@@ -59,5 +59,5 @@ def aggregate(df, startdate, pred_list, loss_func = loss_function, weights = Non
     res_df['p1_win_prob'] = agg_pred.transpose()[0]
     res_df['p2_win_prob'] = agg_pred.transpose()[1]
     res_df = res_df[start_new_period:]
-    res_df = res_df.set_index(['Player1', 'Player2'])
+    res_df = res_df.set_index(['p1', 'p2'])
     return res_df
