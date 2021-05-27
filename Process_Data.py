@@ -88,7 +88,7 @@ def to_csv(matches, filename):
         for stat in match:
             if stat not in columns:
                 columns.append(stat)
-    with open(filename, 'w', newline='') as file:
+    with open(filename, 'w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=columns)
         writer.writeheader()
         for i in range(len(matches)):
@@ -96,7 +96,7 @@ def to_csv(matches, filename):
 
 def csv_to_list(file):
     matches = []
-    with open(file, 'r') as f:
+    with open(file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f, delimiter=',')
         for line in reader:
             matches.append(line)
@@ -240,7 +240,7 @@ def make_csv(matches, filename):
         for stat in match:
             if stat not in columns:
                 columns.append(stat)
-    with open(filename, 'w', newline='') as file:
+    with open(filename, 'w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=columns)
         writer.writeheader()
         for i in range(len(matches)):
