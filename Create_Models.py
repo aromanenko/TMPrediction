@@ -72,11 +72,11 @@ def build_model_classifier(data, startdate='2020-01-01'):
 	metric_accuracy = make_scorer(my_accuracy)
 
 	grid_params = {
-	    'learning_rate': [0.04], 
-	    'max_depth': [4],
-	    'subsample': [0.8],
-	    'colsample_bytree': [0.8],
-	    'n_estimators': [70],
+	    'learning_rate': [0.02, 0.04, 0.1, 0.2], 
+	    'max_depth': [1, 2, 4, 5],
+	    'subsample': [0.7, 0.8, 0.9],
+	    'colsample_bytree': [0.7, 0.8, 0.9],
+	    'n_estimators': [70, 100, 150, 200],
 	    'eval_metric': ['logloss']
 	}
 	cv = TimeSeriesSplit(n_splits=10)
