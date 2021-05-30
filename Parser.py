@@ -81,6 +81,11 @@ class SingleMatchParser:
         self.score1, self.score2 = text.split(' - ')
     
     def get_match_timings(self):
+        months = {1: "Jan", 2: "Feb", 3: "Mar",
+              4: "Apr", 5: "May", 6: "Jun",
+              7: "Jul", 8: "Aug", 9: "Sep",
+              10: "Oct", 11: "Nov", 12: "Dec"
+             }
         self.wait_until_cond("div.Cell-decync-0.fUNPnK")
         try:
             text = self.driver.find_elements_by_css_selector("div.Cell-decync-0.fUNPnK")
@@ -92,7 +97,14 @@ class SingleMatchParser:
             ### TO DO: format processing
             if "after" in text.split('\n')[1]:
                 self.match_duration = text.split('\n')[1]
-            self.date = text.split('\n')[0]
+            if 'Today' in text.split('\n')[0]:
+                now = datetime.date.today()
+                day = now.strftime("%d")
+                year = now.strftime("%Y")
+                month = months[int(now.strftime("%m"))]
+                self.date = '{0} {1} {2}, 15:00'.format(day, month, year)
+            else:
+                self.date = text.split('\n')[0]
         except Exception:
             pass
     
